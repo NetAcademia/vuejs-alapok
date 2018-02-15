@@ -10,3 +10,7 @@ body div.container {
     background-color: transparent;
     border: 2px solid #dee2e6;
 }
+
+.line-through {
+    text-decoration: line-through;
+}
