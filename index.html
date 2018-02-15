@@ -30,8 +30,7 @@
             </button>
 
             <div class="form-group mb-0 flex-grow">
-                <input type="text" class="form-control" placeholder="Add todo here"
-                       @keyup.enter="OnEnterAddTodo()" v-model="newTodoName">
+                <input type="text" class="form-control" placeholder="Add todo here" @keyup.enter="OnEnterAddTodo()" v-model="newTodoName">
             </div>
         </div>
 
@@ -40,7 +39,7 @@
             <ul class="list-group list-group-flush">
 
                 <!-- todo template -->
-                <li class="list-group-item d-flex flex-row align-items-center" v-for="(todo, index) in todoCollection">
+                <li class="list-group-item d-flex flex-row align-items-center" v-for="(todo, index) in filteredTodoCollection">
 
                     <!-- todo.completed -->
                     <div class="custom-control custom-checkbox">
@@ -49,33 +48,41 @@
                     </div>
 
                     <!-- todo.name - view -->
-                    <span :class="{ 'line-through': todo.completed }"
-                          v-show="!todo.editing"
-                          @dblclick="OnDblClickTodoName(todo)">{{ todo.name }}</span>
+                    <span :class="{ 'line-through': todo.completed }" v-show="!todo.editing" @dblclick="OnDblClickTodoName(todo)">{{ todo.name }}</span>
 
                     <!-- todo.name - edit -->
                     <div class="form-group mb-0 flex-grow" v-show="todo.editing">
-                        <input type="text" class="form-control" v-model="todo.name"
-                               @keyup.enter="OnEnterTodoName(todo)">
+                        <input type="text" class="form-control" v-model="editingTodoName"
+                               @keyup.enter="OnEnterTodoName(todo)"
+                               @keyup.esc="OnCancelTodoName(todo)"
+                               @blur="OnCancelTodoName(todo)">
                     </div>
                 </li>
             </ul>
         </div>
 
         <!-- card footer -->
-        <div class="card-footer text-muted d-flex flex-row justify-content-between">
+        <div class="card-footer d-flex flex-row justify-content-between">
             <!-- counter -->
             <span>{{ counter }} {{ counter > 1 ? 'items' : 'item' }} left</span>
 
             <!-- filters -->
             <div>
-                <button type="button" class="btn btn-sm btn-secondary">All</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Active</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Completed</button>
+                <button type="button" class="btn btn-sm" @click="SetFilter('all')" :class="GetFilterButtonClass('all')">
+                    All
+                </button>
+                <button type="button" class="btn btn-sm" @click="SetFilter('active')" :class="GetFilterButtonClass('active')">
+                    Active
+                </button>
+                <button type="button" class="btn btn-sm" @click="SetFilter('completed')" :class="GetFilterButtonClass('completed')">
+                    Completed
+                </button>
             </div>
 
             <!-- remove completed -->
-            <button type="button" class="btn btn-sm btn-link">Remove completed</button>
+            <button type="button" class="btn btn-sm btn-link" @click="OnClickRemoveCompleted()">
+                Remove completed
+            </button>
         </div>
     </div>
 
